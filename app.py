@@ -1,12 +1,16 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from youtube_transcript_api import YouTubeTranscriptApi
 from transformers import pipeline
 
+# Set a writable directory for the Hugging Face cache
+os.environ['TRANSFORMERS_CACHE'] = '/tmp/huggingface/'
+
 app = Flask(__name__)
 CORS(app)
 
-summarizer = pipeline("summarization")
+summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6", cache_dir='/tmp/huggingface/')
 
 def get_video_id(url):
     from urllib.parse import urlparse, parse_qs
